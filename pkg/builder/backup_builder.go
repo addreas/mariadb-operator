@@ -25,9 +25,15 @@ func (b *Builder) BuildRestore(mariadb *mariadbv1alpha1.MariaDB, key types.Names
 				},
 				WaitForIt: true,
 			},
-			Affinity:     mariadb.Spec.Affinity,
-			NodeSelector: mariadb.Spec.NodeSelector,
-			Tolerations:  mariadb.Spec.Tolerations,
+			PodTemplate: mariadbv1alpha1.PodTemplate{
+				Affinity:           mariadb.Spec.Affinity,
+				NodeSelector:       mariadb.Spec.NodeSelector,
+				Tolerations:        mariadb.Spec.Tolerations,
+				PodSecurityContext: mariadb.Spec.PodSecurityContext,
+			},
+			ContainerTemplate: mariadbv1alpha1.ContainerTemplate{
+				SecurityContext: mariadb.Spec.ContainerTemplate.SecurityContext,
+			},
 		},
 	}
 	if err := controllerutil.SetControllerReference(mariadb, restore, b.scheme); err != nil {
