@@ -68,16 +68,23 @@ func withTolerations(tolerations ...corev1.Toleration) jobOption {
 	}
 }
 
+func withPodSecurityContext(podSecurityContext *corev1.PodSecurityContext) jobOption {
+	return func(b *jobBuilder) {
+		b.podSecurityContext = podSecurityContext
+	}
+}
+
 type jobBuilder struct {
-	meta           *metav1.ObjectMeta
-	volumes        []corev1.Volume
-	initContainers []corev1.Container
-	containers     []corev1.Container
-	backoffLimit   *int32
-	restartPolicy  *corev1.RestartPolicy
-	affinity       *corev1.Affinity
-	nodeSelector   map[string]string
-	tolerations    []corev1.Toleration
+	meta               *metav1.ObjectMeta
+	volumes            []corev1.Volume
+	initContainers     []corev1.Container
+	containers         []corev1.Container
+	backoffLimit       *int32
+	restartPolicy      *corev1.RestartPolicy
+	affinity           *corev1.Affinity
+	nodeSelector       map[string]string
+	tolerations        []corev1.Toleration
+	podSecurityContext *corev1.PodSecurityContext
 }
 
 func newJobBuilder(opts ...jobOption) (*jobBuilder, error) {
@@ -102,11 +109,12 @@ func (b *jobBuilder) build() *batchv1.Job {
 	template := corev1.PodTemplateSpec{
 		ObjectMeta: *b.meta,
 		Spec: corev1.PodSpec{
-			Volumes:      b.volumes,
-			Containers:   b.containers,
-			Affinity:     b.affinity,
-			NodeSelector: b.nodeSelector,
-			Tolerations:  b.tolerations,
+			Volumes:         b.volumes,
+			Containers:      b.containers,
+			Affinity:        b.affinity,
+			NodeSelector:    b.nodeSelector,
+			Tolerations:     b.tolerations,
+			SecurityContext: b.podSecurityContext,
 		},
 	}
 	if b.initContainers != nil {
@@ -129,7 +137,7 @@ func (b *jobBuilder) build() *batchv1.Job {
 }
 
 func jobContainer(name string, cmd *cmd.Command, image string, volumeMounts []corev1.VolumeMount, env []v1.EnvVar,
-	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB) corev1.Container {
+	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB, securityContext *corev1.SecurityContext) corev1.Container {
 
 	container := corev1.Container{
 		Name:            name,
@@ -139,6 +147,7 @@ func jobContainer(name string, cmd *cmd.Command, image string, volumeMounts []co
 		Args:            cmd.Args,
 		Env:             env,
 		VolumeMounts:    volumeMounts,
+		SecurityContext: securityContext,
 	}
 	if resources != nil {
 		container.Resources = *resources
@@ -147,13 +156,13 @@ func jobContainer(name string, cmd *cmd.Command, image string, volumeMounts []co
 }
 
 func jobMariadbOperatorContainer(cmd *cmd.Command, volumeMounts []corev1.VolumeMount, envVar []v1.EnvVar,
-	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB, env *environment.Environment) corev1.Container {
-	return jobContainer("mariadb-operator", cmd, env.MariadbOperatorImage, volumeMounts, envVar, resources, mariadb)
+	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB, env *environment.Environment, securityContext *corev1.SecurityContext) corev1.Container {
+	return jobContainer("mariadb-operator", cmd, env.MariadbOperatorImage, volumeMounts, envVar, resources, mariadb, securityContext)
 }
 
 func jobMariadbContainer(cmd *cmd.Command, volumeMounts []corev1.VolumeMount, envVar []v1.EnvVar,
-	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB) corev1.Container {
-	return jobContainer("mariadb", cmd, mariadb.Spec.Image, volumeMounts, envVar, resources, mariadb)
+	resources *corev1.ResourceRequirements, mariadb *mariadbv1alpha1.MariaDB, securityContext *corev1.SecurityContext) corev1.Container {
+	return jobContainer("mariadb", cmd, mariadb.Spec.Image, volumeMounts, envVar, resources, mariadb, securityContext)
 }
 
 func jobBatchStorageVolume(volumeSource *corev1.VolumeSource, s3 *mariadbv1alpha1.S3) ([]corev1.Volume, []corev1.VolumeMount) {

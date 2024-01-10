@@ -40,9 +40,11 @@ var _ = Describe("Backup webhook", func() {
 							WaitForIt: true,
 						},
 						BackoffLimit: 10,
-						Resources: &corev1.ResourceRequirements{
-							Requests: corev1.ResourceList{
-								"cpu": resource.MustParse("100m"),
+						ContainerTemplate: ContainerTemplate{
+							Resources: &corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									"cpu": resource.MustParse("100m"),
+								},
 							},
 						},
 						RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -76,9 +78,11 @@ var _ = Describe("Backup webhook", func() {
 							WaitForIt: true,
 						},
 						BackoffLimit: 10,
-						Resources: &corev1.ResourceRequirements{
-							Requests: corev1.ResourceList{
-								"cpu": resource.MustParse("100m"),
+						ContainerTemplate: ContainerTemplate{
+							Resources: &corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									"cpu": resource.MustParse("100m"),
+								},
 							},
 						},
 						RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -107,9 +111,11 @@ var _ = Describe("Backup webhook", func() {
 							WaitForIt: true,
 						},
 						BackoffLimit: 10,
-						Resources: &corev1.ResourceRequirements{
-							Requests: corev1.ResourceList{
-								"cpu": resource.MustParse("100m"),
+						ContainerTemplate: ContainerTemplate{
+							Resources: &corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									"cpu": resource.MustParse("100m"),
+								},
 							},
 						},
 						RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -141,9 +147,11 @@ var _ = Describe("Backup webhook", func() {
 							WaitForIt: true,
 						},
 						BackoffLimit: 10,
-						Resources: &corev1.ResourceRequirements{
-							Requests: corev1.ResourceList{
-								"cpu": resource.MustParse("100m"),
+						ContainerTemplate: ContainerTemplate{
+							Resources: &corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									"cpu": resource.MustParse("100m"),
+								},
 							},
 						},
 						RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -175,9 +183,11 @@ var _ = Describe("Backup webhook", func() {
 							WaitForIt: true,
 						},
 						BackoffLimit: 10,
-						Resources: &corev1.ResourceRequirements{
-							Requests: corev1.ResourceList{
-								"cpu": resource.MustParse("100m"),
+						ContainerTemplate: ContainerTemplate{
+							Resources: &corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									"cpu": resource.MustParse("100m"),
+								},
 							},
 						},
 						RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -214,9 +224,11 @@ var _ = Describe("Backup webhook", func() {
 						WaitForIt: true,
 					},
 					BackoffLimit: 10,
-					Resources: &corev1.ResourceRequirements{
-						Requests: corev1.ResourceList{
-							"cpu": resource.MustParse("100m"),
+					ContainerTemplate: ContainerTemplate{
+						Resources: &corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								"cpu": resource.MustParse("100m"),
+							},
 						},
 					},
 					RestartPolicy: corev1.RestartPolicyOnFailure,
