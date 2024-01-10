@@ -928,6 +928,8 @@ spec:
                       endpoint:
                         description: Endpoint is the S3 API endpoint without scheme.
                         type: string
+                      prefix:
+                        type: string
                       region:
                         description: Region is the S3 region name to use.
                         type: string
@@ -1005,6 +1007,7 @@ spec:
                     - accessKeyIdSecretKeyRef
                     - bucket
                     - endpoint
+                    - prefix
                     - secretAccessKeySecretKeyRef
                     type: object
                   targetRecoveryTime:

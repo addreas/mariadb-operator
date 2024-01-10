@@ -266,6 +266,8 @@ type S3 struct {
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	TLS *TLS `json:"tls,omitempty"`
+
+	Prefix string `json:"prefix"`
 }
 
 // RestoreSource defines a source for restoring a MariaDB.
